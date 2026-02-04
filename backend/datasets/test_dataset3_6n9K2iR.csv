@@ -1,0 +1,6 @@
+type,flowrate,pressure,temperature
+Pump,10,5,100
+Valve,8,4,95
+Pump,12,6,105
+Reactor,15,8,200
+Valve,9,4.5,98
