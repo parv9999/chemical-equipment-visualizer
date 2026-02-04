@@ -3,63 +3,143 @@ import requests
 import pandas as pd
 
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout,
-    QPushButton, QFileDialog, QLabel,
-    QTableWidget, QTableWidgetItem
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout,
+    QPushButton, QFileDialog, QLabel, QTableWidget,
+    QTableWidgetItem, QMessageBox, QGroupBox
 )
+from PyQt5.QtCore import Qt
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
 
 API_UPLOAD = "http://127.0.0.1:8000/api/upload/"
+API_PDF = "http://127.0.0.1:8000/api/report/"
 
 
 class App(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Chemical Equipment Visualizer (Desktop)")
-        self.setGeometry(100, 100, 800, 600)
+        self.setWindowTitle("Chemical Equipment Visualizer – Desktop")
+        self.setGeometry(100, 100, 1000, 700)
 
-        layout = QVBoxLayout()
+        main_layout = QVBoxLayout()
+        main_layout.setSpacing(15)
 
-        self.label = QLabel("Upload CSV file")
-        layout.addWidget(self.label)
+        # ===== Header =====
+        title = QLabel("Chemical Equipment Analysis Dashboard")
+        title.setAlignment(Qt.AlignCenter)
+        title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        main_layout.addWidget(title)
 
-        self.button = QPushButton("Upload CSV")
-        self.button.clicked.connect(self.upload_csv)
-        layout.addWidget(self.button)
+        self.status_label = QLabel("Upload a CSV file to begin")
+        self.status_label.setAlignment(Qt.AlignCenter)
+        main_layout.addWidget(self.status_label)
 
+        # ===== Buttons =====
+        btn_layout = QHBoxLayout()
+
+        self.upload_btn = QPushButton("Upload CSV")
+        self.upload_btn.clicked.connect(self.upload_csv)
+        btn_layout.addWidget(self.upload_btn)
+
+        self.pdf_btn = QPushButton("Download PDF Report")
+        self.pdf_btn.setEnabled(False)
+        self.pdf_btn.clicked.connect(self.download_pdf)
+        btn_layout.addWidget(self.pdf_btn)
+
+        main_layout.addLayout(btn_layout)
+
+        # ===== Summary Box =====
+        summary_box = QGroupBox("Summary")
+        summary_layout = QHBoxLayout()
+
+        self.total_label = QLabel("Total Records: -")
+        self.flow_label = QLabel("Avg Flowrate: -")
+        self.pressure_label = QLabel("Avg Pressure: -")
+        self.temp_label = QLabel("Avg Temperature: -")
+
+        for lbl in [self.total_label, self.flow_label, self.pressure_label, self.temp_label]:
+            lbl.setStyleSheet("font-weight: bold;")
+            summary_layout.addWidget(lbl)
+
+        summary_box.setLayout(summary_layout)
+        main_layout.addWidget(summary_box)
+
+        # ===== Table =====
         self.table = QTableWidget()
-        layout.addWidget(self.table)
+        self.table.horizontalHeader().setStretchLastSection(True)
+        main_layout.addWidget(self.table, stretch=2)
 
-        self.figure = Figure()
+        # ===== Chart =====
+        self.figure = Figure(figsize=(5, 3))
         self.canvas = FigureCanvasQTAgg(self.figure)
-        layout.addWidget(self.canvas)
+        main_layout.addWidget(self.canvas, stretch=1)
 
-        self.setLayout(layout)
+        self.setLayout(main_layout)
+
+    # ================== LOGIC ==================
 
     def upload_csv(self):
         file_path, _ = QFileDialog.getOpenFileName(
-            self, "Open CSV", "", "CSV Files (*.csv)"
+            self, "Select CSV File", "", "CSV Files (*.csv)"
         )
 
         if not file_path:
             return
 
-        files = {'file': open(file_path, 'rb')}
-        response = requests.post(API_UPLOAD, files=files)
+        self.status_label.setText("Uploading CSV...")
 
-        if response.status_code != 200:
-            self.label.setText("Upload failed")
+        try:
+            with open(file_path, 'rb') as f:
+                response = requests.post(API_UPLOAD, files={'file': f})
+
+            if response.status_code != 200:
+                raise Exception("Upload failed")
+
+            data = response.json()
+
+            # Update summary
+            avg = data.get("averages", {})
+
+            self.total_label.setText(f"Total Records: {data['total_count']}")
+            self.flow_label.setText(f"Avg Flowrate: {avg.get('flowrate', 'N/A')}")
+            self.pressure_label.setText(f"Avg Pressure: {avg.get('pressure', 'N/A')}")
+            self.temp_label.setText(f"Avg Temperature: {avg.get('temperature', 'N/A')}")
+
+
+            self.display_table(file_path)
+            self.display_chart(data['type_distribution'])
+
+            self.pdf_btn.setEnabled(True)
+            self.status_label.setText("Upload successful")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e))
+            self.status_label.setText("Upload failed")
+
+    def download_pdf(self):
+        save_path, _ = QFileDialog.getSaveFileName(
+            self, "Save PDF", "chemical_equipment_report.pdf", "PDF Files (*.pdf)"
+        )
+
+        if not save_path:
             return
 
-        data = response.json()
-        self.label.setText(f"Total Records: {data['total_count']}")
+        try:
+            response = requests.get(API_PDF)
 
-        self.display_table(file_path)
-        self.display_chart(data['type_distribution'])
+            if response.status_code != 200:
+                raise Exception("Failed to download PDF")
+
+            with open(save_path, "wb") as f:
+                f.write(response.content)
+
+            QMessageBox.information(self, "Success", "PDF downloaded successfully")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e))
 
     def display_table(self, file_path):
         df = pd.read_csv(file_path)
@@ -78,12 +158,10 @@ class App(QWidget):
         self.figure.clear()
         ax = self.figure.add_subplot(111)
 
-        ax.bar(
-            type_distribution.keys(),
-            type_distribution.values()
-        )
-
+        ax.bar(type_distribution.keys(), type_distribution.values())
         ax.set_title("Equipment Type Distribution")
+        ax.set_ylabel("Count")
+
         self.canvas.draw()
 
 
