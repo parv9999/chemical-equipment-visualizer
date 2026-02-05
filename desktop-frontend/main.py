@@ -1,6 +1,8 @@
 import sys
 import requests
 import pandas as pd
+import matplotlib
+matplotlib.use("Qt5Agg")
 
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout,
@@ -12,9 +14,13 @@ from PyQt5.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
+# ================= API CONFIG =================
 
-API_UPLOAD = "http://127.0.0.1:8000/api/upload/"
-API_PDF = "http://127.0.0.1:8000/api/report/"
+API_BASE = "https://chemical-equipment-visualizer-2-ezia.onrender.com/api/"
+API_UPLOAD = API_BASE + "upload/"
+API_REPORT = API_BASE + "report/"
+
+# =============================================
 
 
 class App(QWidget):
@@ -60,7 +66,12 @@ class App(QWidget):
         self.pressure_label = QLabel("Avg Pressure: -")
         self.temp_label = QLabel("Avg Temperature: -")
 
-        for lbl in [self.total_label, self.flow_label, self.pressure_label, self.temp_label]:
+        for lbl in [
+            self.total_label,
+            self.flow_label,
+            self.pressure_label,
+            self.temp_label
+        ]:
             lbl.setStyleSheet("font-weight: bold;")
             summary_layout.addWidget(lbl)
 
@@ -92,25 +103,30 @@ class App(QWidget):
         self.status_label.setText("Uploading CSV...")
 
         try:
-            with open(file_path, 'rb') as f:
-                response = requests.post(API_UPLOAD, files={'file': f})
+            with open(file_path, "rb") as f:
+                response = requests.post(
+                    API_UPLOAD,
+                    files={"file": f},
+                    timeout=120
+                )
 
             if response.status_code != 200:
-                raise Exception("Upload failed")
+                raise Exception(
+                    f"API Error {response.status_code}\n{response.text}"
+                )
 
             data = response.json()
 
             # Update summary
             avg = data.get("averages", {})
 
-            self.total_label.setText(f"Total Records: {data['total_count']}")
+            self.total_label.setText(f"Total Records: {data.get('total_count', '-')}")
             self.flow_label.setText(f"Avg Flowrate: {avg.get('flowrate', 'N/A')}")
             self.pressure_label.setText(f"Avg Pressure: {avg.get('pressure', 'N/A')}")
             self.temp_label.setText(f"Avg Temperature: {avg.get('temperature', 'N/A')}")
 
-
             self.display_table(file_path)
-            self.display_chart(data['type_distribution'])
+            self.display_chart(data.get("type_distribution", {}))
 
             self.pdf_btn.setEnabled(True)
             self.status_label.setText("Upload successful")
@@ -121,14 +137,17 @@ class App(QWidget):
 
     def download_pdf(self):
         save_path, _ = QFileDialog.getSaveFileName(
-            self, "Save PDF", "chemical_equipment_report.pdf", "PDF Files (*.pdf)"
+            self,
+            "Save PDF",
+            "chemical_equipment_report.pdf",
+            "PDF Files (*.pdf)"
         )
 
         if not save_path:
             return
 
         try:
-            response = requests.get(API_PDF)
+            response = requests.get(API_REPORT, timeout=30)
 
             if response.status_code != 200:
                 raise Exception("Failed to download PDF")
@@ -136,7 +155,11 @@ class App(QWidget):
             with open(save_path, "wb") as f:
                 f.write(response.content)
 
-            QMessageBox.information(self, "Success", "PDF downloaded successfully")
+            QMessageBox.information(
+                self,
+                "Success",
+                "PDF downloaded successfully"
+            )
 
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e))
@@ -158,7 +181,10 @@ class App(QWidget):
         self.figure.clear()
         ax = self.figure.add_subplot(111)
 
-        ax.bar(type_distribution.keys(), type_distribution.values())
+        ax.bar(
+            type_distribution.keys(),
+            type_distribution.values()
+        )
         ax.set_title("Equipment Type Distribution")
         ax.set_ylabel("Count")
 
