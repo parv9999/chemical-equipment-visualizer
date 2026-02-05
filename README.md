@@ -1,5 +1,10 @@
 🧪 Chemical Equipment Visualizer
 
+## Live Deployment
+Frontend: https://chemical-eq-visualizer-fossee-frontend.onrender.com  
+Backend API: https://chemical-equipment-visualizer-2-ezia.onrender.com
+
+
 A Web + Desktop Based Data Analysis & Visualization System
 
 📌 Project Overview
