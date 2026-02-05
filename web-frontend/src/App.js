@@ -7,7 +7,7 @@ import { Tabs, Tab, Alert, Spinner, Card, Button, Table } from 'react-bootstrap'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
 
-const API_BASE = 'http://127.0.0.1:8000/api/';
+const API_BASE = "https://chemical-equipment-visualizer-2-ezia.onrender.com/api/";
 
 axios.defaults.auth = { username: 'admin', password: 'admin123' };
 
