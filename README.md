@@ -1,211 +1,176 @@
-🧪 Chemical Equipment Visualizer
+# 🧪 Chemical Equipment Visualizer
 
-## Live Deployment
+## 🌐 Live Deployment
 
-Frontend: [https://chemical-eq-visualizer-fossee-frontend.onrender.com](https://chemical-eq-visualizer-fossee-frontend.onrender.com)  
+**Frontend:**
+[Chemical Equipment Visualizer Frontend](https://chemical-eq-visualizer-fossee-frontend.onrender.com?utm_source=chatgpt.com)
 
-Backend API: [https://chemical-equipment-visualizer-2-ezia.onrender.com](https://chemical-equipment-visualizer-2-ezia.onrender.com)
+**Backend API:**
+[Chemical Equipment Visualizer Backend API](https://chemical-equipment-visualizer-2-ezia.onrender.com?utm_source=chatgpt.com)
 
-A Web + Desktop Based Data Analysis & Visualization System
+---
 
-📌 Project Overview
+# 📌 Project Overview
 
-The Chemical Equipment Visualizer is a full-stack data analysis application designed to analyze chemical plant equipment data from CSV files and generate meaningful insights such as:
+Chemical Equipment Visualizer is a full-stack industrial data analysis and visualization platform developed for processing and analyzing chemical plant equipment datasets from CSV files.
 
-Equipment count
+The system enables engineers and users to upload industrial equipment datasets, perform automated statistical analysis, generate visual insights, and export professional PDF reports.
 
-Type distribution
+The project combines:
 
-Average flowrate, pressure, and temperature
+* 🌐 Web Backend using Django REST Framework
+* 🖥️ Desktop GUI Application using PyQt5
+* 📊 Data Analytics using Pandas
+* 📈 Visualization using Matplotlib
+* 📄 Automated PDF Report Generation
 
-Tabular visualization
+This project demonstrates real-world software engineering concepts including REST API development, desktop-to-server communication, industrial data processing, and analytical reporting workflows.
 
-Graphical charts
+---
 
-Downloadable PDF report
+# 🚀 Key Features
 
-The project includes:
+## ✅ Backend (Django REST Framework)
 
-🌐 Web backend (Django REST API)
+* CSV file upload via REST API
+* Equipment dataset validation & processing
+* Automated analytical computations:
 
-🖥️ Desktop application (PyQt5)
+  * Total equipment count
+  * Equipment category distribution
+  * Average flowrate
+  * Average pressure
+  * Average temperature
+* JSON-based API responses
+* Automated downloadable PDF report generation
 
-📊 Data analysis using Pandas
+---
 
-📄 PDF report generation
+## ✅ Desktop Application (PyQt5)
 
-This project demonstrates real-world data handling, API integration, and multi-platform visualization, making it suitable for industry and academic evaluation.
+* Modern desktop dashboard interface
+* CSV dataset upload support
+* Interactive tabular dataset visualization
+* Graphical equipment analytics
+* Real-time summary statistics
+* One-click PDF report download
 
-🏗️ System Architecture
+---
 
-CSV File
+## ✅ Data Visualization & Reporting
 
-   ↓
+* Equipment distribution charts
+* Interactive data tables
+* Statistical summaries
+* Professionally formatted PDF reports
 
-Desktop App (PyQt5)
+---
 
-   ↓  (POST request)
+# 🏗️ System Architecture
 
-Django REST API
+```
+CSV Dataset
+     ↓
+Desktop Application (PyQt5)
+     ↓  REST API Request
+Django Backend API
+     ↓
+Data Processing Engine (Pandas)
+     ↓
+Analytics + Visualization + PDF Report
+```
 
-   ↓
+---
 
-Data Processing (Pandas)
+# 📂 Project Structure
 
-   ↓
-
-JSON Summary + PDF Report
-
-🚀 Features
-
-✅ Backend (Django REST Framework)
-
-Upload CSV files via API
-
-Validate and process equipment data
-
-Calculate:
-
-   Total equipment count
-
-  Equipment type distribution
-
-   Average flowrate
-
-   Average pressure
-
-   Average temperature
-
-   Generate downloadable PDF report
-
-✅ Desktop Application (PyQt5)
-
-Modern dashboard UI
-
-CSV file upload
-
-Tabular display of dataset
-
-Bar chart visualization of equipment types
-
-Summary metrics display
-
-One-click PDF report download
-
-✅ Data Visualization
-
-Table view for full dataset
-
-Bar chart for equipment distribution
-
-Clean and readable PDF report
-
-📂 Project Structure
-
+```
 chemical-equipment-visualizer/
-
 │
-
 ├── backend/
-
 │   ├── backend/
-
 │   │   ├── settings.py
-
 │   │   ├── urls.py
-
 │   │
-
 │   ├── api/
-
 │   │   ├── models.py
-
 │   │   ├── views.py
-
 │   │   ├── urls.py
-
 │   │
-
 │   └── manage.py
-
 │
-
 ├── desktop/
-
 │   └── main.py
-
 │
-
 ├── sample_data.csv
-
 ├── requirements.txt
-
 └── README.md
+```
 
-📄 CSV File Format
+---
 
-The application expects the CSV file in the following format:
+# 📄 Expected CSV Format
 
+```
 Equipment Name,Type,Flowrate,Pressure,Temperature
-
 Pump-1,Pump,120,5.2,110
-
 Compressor-1,Compressor,95,8.4,95
-
 Valve-1,Valve,60,4.1,105
+```
 
-Column Description
+---
 
-Column	Description
+# 📊 Analytical Metrics Generated
 
-Equipment Name	Name of the equipment
+The platform automatically computes:
 
-Type	Equipment category
+* Total Equipment Records
+* Equipment Type Distribution
+* Average Flowrate
+* Average Pressure
+* Average Temperature
 
-Flowrate	Flow rate value
+---
 
-Pressure	Operating pressure
+# 🛠️ Technologies Used
 
-Temperature	Operating temperature
+## Backend Technologies
 
-🛠️ Technologies Used
+* Python 3
+* Django
+* Django REST Framework
+* Pandas
+* ReportLab
 
-Backend
+## Desktop Application
 
-Python 3
+* PyQt5
+* Requests
+* Matplotlib
 
-Django
+## Development Tools
 
-Django REST Framework
+* Git & GitHub
+* VS Code
+* Render Cloud Deployment
 
-Pandas
+---
 
-ReportLab (PDF generation)
+# ⚙️ Installation & Setup
 
-Desktop App
+## 1️⃣ Clone Repository
 
-PyQt5
-
-Requests
-
-Matplotlib
-
-Tools
-
-Git & GitHub
-
-VS Code
-
-⚙️ Installation & Setup
-
-1️⃣ Clone the Repository
-
-git clone [https://github.com/parv9999/chemical-equipment-visualizer.git](https://github.com/parv9999/chemical-equipment-visualizer.git)
+```
+git clone https://github.com/parv9999/chemical-equipment-visualizer.git
 
 cd chemical-equipment-visualizer
+```
 
-2️⃣ Backend Setup
+---
 
+## 2️⃣ Backend Setup
+
+```
 cd backend
 
 pip install -r requirements.txt
@@ -213,99 +178,110 @@ pip install -r requirements.txt
 python manage.py migrate
 
 python manage.py runserver
+```
 
-Backend will run at:
+Backend runs at:
 
-[http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+```
+http://127.0.0.1:8000/
+```
 
-3️⃣ Desktop Application Setup
+---
 
+## 3️⃣ Desktop Application Setup
+
+```
 cd desktop
 
 pip install pyqt5 pandas matplotlib requests
 
 python main.py
+```
 
-🔌 API Endpoints
+---
 
-Endpoint	Method	Description
+# 🔌 REST API Endpoints
 
-/api/upload/	POST	Upload CSV & get summary
+| EndpointMethodDescription |      |                                 |
+| ------------------------- | ---- | ------------------------------- |
+| `/api/upload/`            | POST | Upload CSV & generate analytics |
+| `/api/summary/`           | GET  | Retrieve dataset summaries      |
+| `/api/report/`            | GET  | Download generated PDF report   |
 
-/api/summary/	GET	Recent dataset summaries
+---
 
-/api/report/	GET	Download PDF report
+# 📈 Output Capabilities
 
-📊 Output Examples
+## ✔ Dashboard Analytics
 
-✔ Dashboard Summary
+* Total Equipment Count
+* Flowrate Analysis
+* Pressure Analysis
+* Temperature Analysis
 
-Total Records
+## ✔ Visual Insights
 
-Average Flowrate
+* Equipment Distribution Charts
+* Tabular Dataset Representation
 
-Average Pressure
+## ✔ Exportable Reports
 
-Average Temperature
+* Automated PDF generation
+* Structured industrial summaries
+* Academic & industry-ready documentation
 
-✔ Visualizations
+---
 
-Equipment type bar chart
+# 🎯 Real-World Use Cases
 
-Data table view
+* Chemical plant equipment analysis
+* Industrial operational monitoring
+* Engineering dataset visualization
+* Academic research projects
+* REST API learning projects
+* Desktop-to-backend integration systems
 
-✔ PDF Report
+---
 
-Title & metadata
+# 📚 Learning Outcomes
 
-Equipment summary
+This project demonstrates practical understanding of:
 
-Ready for academic submission
+* REST API Development
+* Full-Stack Application Architecture
+* Industrial Data Processing
+* Desktop GUI Development
+* Client-Server Communication
+* Data Visualization
+* Automated Report Generation
+* Software Deployment Workflows
 
-🎯 Use Cases
+---
 
-Chemical plant data analysis
+# 🔮 Future Enhancements
 
-Academic project submission (FOSSEE / University)
+* User Authentication & Authorization
+* Cloud Deployment on AWS
+* Advanced Interactive Dashboards
+* Real-Time Equipment Monitoring
+* Database Integration
+* Predictive Maintenance using Machine Learning
+* Equipment Health Forecasting
 
-Learning Django REST APIs
+---
 
-Learning Desktop–Backend integration
+# 👨‍💻 Author
 
-Beginner-friendly real-world project
-
-📌 Learning Outcomes
-
-REST API development
-
-CSV data processing
-
-Desktop UI design
-
-Client-server architecture
-
-Git & GitHub workflow
-
-PDF report automation
-
-🔮 Future Enhancements
-
-Authentication & user roles
-
-Advanced charts (line, pie)
-
-Cloud deployment
-
-Database analytics dashboard
-
-Equipment health prediction using ML
-
-👨‍💻 Author
-
-Parv Chauhan
-
+**Parv Chauhan**
 B.Tech Computer Science
-
 VIT Bhopal University
 
-📌 This project was built as part of academic and skill-development work.
+---
+
+# 📌 Project Status
+
+✅ Fully Functional
+✅ Frontend & Backend Deployed
+✅ Industrial Dataset Analysis Supported
+✅ PDF Report Generation Implemented
+✅ Ready for Academic & Portfolio Showcase
